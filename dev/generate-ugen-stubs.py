@@ -2,7 +2,6 @@
 """Generate .pyi stub files for UGen classes."""
 
 import ast
-import sys
 from pathlib import Path
 from typing import Any
 
@@ -13,7 +12,8 @@ class UGenStubGenerator(ast.NodeVisitor):
     def __init__(self, source_path: Path):
         self.source_path = source_path
         self.imports: set[str] = set()
-        self.classes: list[str] = []
+        self.ugen_classes: list[str] = []
+        self.non_ugen_classes: list[str] = []
         self.ugen_decorator_params: dict[str, Any] = {}
         self.current_class_params: list[tuple[str, bool]] = []
 
@@ -39,19 +39,19 @@ class UGenStubGenerator(ast.NodeVisitor):
                 ugen_decorator = decorator
                 break
 
-        if not ugen_decorator:
-            self.generic_visit(node)
-            return
+        if ugen_decorator:
+            # Parse decorator arguments
+            decorator_args = self._parse_decorator_args(ugen_decorator)
 
-        # Parse decorator arguments
-        decorator_args = self._parse_decorator_args(ugen_decorator)
+            # Collect param() calls
+            params = self._collect_params(node)
 
-        # Collect param() calls
-        params = self._collect_params(node)
-
-        # Generate stub
-        stub = self._generate_stub(node.name, decorator_args, params)
-        self.classes.append(stub)
+            # Generate stub
+            stub = self._generate_ugen_stub(node.name, decorator_args, params)
+            self.ugen_classes.append(stub)
+        else:
+            # Track non-@ugen classes
+            self.non_ugen_classes.append(node.name)
 
         self.generic_visit(node)
 
@@ -97,10 +97,10 @@ class UGenStubGenerator(ast.NodeVisitor):
                     return bool(keyword.value.value)
         return False
 
-    def _generate_stub(
+    def _generate_ugen_stub(
         self, class_name: str, decorator_args: dict[str, Any], params: list[tuple[str, bool]]
     ) -> str:
-        """Generate stub class definition."""
+        """Generate stub class definition for @ugen decorated classes."""
         lines = [f"class {class_name}(UGen):"]
 
         # Generate __init__ method
@@ -153,6 +153,127 @@ class UGenStubGenerator(ast.NodeVisitor):
 
         return "\n".join(lines)
 
+    def _generate_non_ugen_stub(self, node: ast.ClassDef) -> str:
+        """Generate a basic stub for a non-@ugen class."""
+        lines = []
+
+        # Class definition with base classes
+        if node.bases:
+            bases = []
+            for base in node.bases:
+                if isinstance(base, ast.Name):
+                    bases.append(base.id)
+                elif isinstance(base, ast.Attribute):
+                    bases.append(f"{ast.unparse(base.value)}.{base.attr}")
+            bases_str = f"({', '.join(bases)})" if bases else ""
+        else:
+            bases_str = ""
+
+        lines.append(f"class {node.name}{bases_str}:")
+
+        # Find methods
+        has_methods = False
+
+        for item in node.body:
+            if isinstance(item, ast.FunctionDef):
+                has_methods = True
+                if item.name == "__init__":
+                    # Generate __init__ stub
+                    params = self._get_function_params(item)
+                    lines.append(f"    def __init__({params}) -> None: ...")
+                elif not item.name.startswith("_") or item.name in ["__str__", "__repr__", "__plot__"]:
+                    # Generate method stub for public methods and some special methods
+                    params = self._get_function_params(item)
+                    return_type = self._get_return_annotation(item)
+
+                    # Check if it's a property
+                    is_property = any(
+                        isinstance(d, ast.Name) and d.id == "property"
+                        for d in item.decorator_list
+                    )
+
+                    if is_property:
+                        lines.append("    @property")
+                        lines.append(f"    def {item.name}(self) -> {return_type}: ...")
+                    elif any(isinstance(d, ast.Name) and d.id == "staticmethod" for d in item.decorator_list):
+                        lines.append("    @staticmethod")
+                        lines.append(f"    def {item.name}({params}) -> {return_type}: ...")
+                    elif any(isinstance(d, ast.Name) and d.id == "classmethod" for d in item.decorator_list):
+                        lines.append("    @classmethod")
+                        lines.append(f"    def {item.name}({params}) -> {return_type}: ...")
+                    else:
+                        lines.append(f"    def {item.name}({params}) -> {return_type}: ...")
+
+        # If no methods, add ellipsis
+        if not has_methods:
+            lines.append("    ...")
+
+        return "\n".join(lines)
+
+    def _get_function_params(self, func: ast.FunctionDef) -> str:
+        """Extract function parameters as a string."""
+        params = []
+        args = func.args
+
+        # Regular args
+        for i, arg in enumerate(args.args):
+            param_str = arg.arg
+            if arg.annotation:
+                param_str += f": {ast.unparse(arg.annotation)}"
+            # Check if it has a default
+            default_offset = len(args.args) - len(args.defaults)
+            if i >= default_offset:
+                default = args.defaults[i - default_offset]
+                param_str += f" = {ast.unparse(default)}"
+            params.append(param_str)
+
+        # *args
+        if args.vararg:
+            vararg_str = f"*{args.vararg.arg}"
+            if args.vararg.annotation:
+                vararg_str += f": {ast.unparse(args.vararg.annotation)}"
+            params.append(vararg_str)
+
+        # Keyword-only args
+        for i, arg in enumerate(args.kwonlyargs):
+            param_str = arg.arg
+            if arg.annotation:
+                param_str += f": {ast.unparse(arg.annotation)}"
+            if i < len(args.kw_defaults) and args.kw_defaults[i] is not None:
+                param_str += f" = {ast.unparse(args.kw_defaults[i])}"
+            params.append(param_str)
+
+        # **kwargs
+        if args.kwarg:
+            kwarg_str = f"**{args.kwarg.arg}"
+            if args.kwarg.annotation:
+                kwarg_str += f": {ast.unparse(args.kwarg.annotation)}"
+            params.append(kwarg_str)
+
+        return ", ".join(params)
+
+    def _get_return_annotation(self, func: ast.FunctionDef) -> str:
+        """Get the return type annotation."""
+        if func.returns:
+            return ast.unparse(func.returns)
+        return "Any"
+
+    def _collect_non_ugen_stubs(self) -> list[str]:
+        """Collect stubs for non-@ugen classes."""
+        if not self.non_ugen_classes:
+            return []
+
+        # Re-parse to get class nodes
+        source = self.source_path.read_text()
+        tree = ast.parse(source)
+
+        stubs = []
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ClassDef) and node.name in self.non_ugen_classes:
+                stubs.append(self._generate_non_ugen_stub(node))
+
+        return stubs
+
     def generate(self) -> str:
         """Generate complete stub file content."""
         # Read and parse source file
@@ -174,8 +295,14 @@ class UGenStubGenerator(ast.NodeVisitor):
             ]
         )
 
-        # Add classes
-        for class_stub in self.classes:
+        # Add non-@ugen classes first
+        non_ugen_stubs = self._collect_non_ugen_stubs()
+        for stub in non_ugen_stubs:
+            lines.append(stub)
+            lines.append("")
+
+        # Add @ugen classes
+        for class_stub in self.ugen_classes:
             lines.append(class_stub)
             lines.append("")
 
@@ -200,12 +327,12 @@ def main():
         stub_content = generator.generate()
 
         # Only write stub if there are classes
-        if generator.classes:
+        if generator.ugen_classes or generator.non_ugen_classes:
             stub_file = ugen_file.with_suffix(".pyi")
             stub_file.write_text(stub_content)
-            print(f"  Generated {stub_file.name}")
+            print(f"  Generated {stub_file.name} ({len(generator.ugen_classes)} @ugen, {len(generator.non_ugen_classes)} other)")
         else:
-            print(f"  No @ugen classes found, skipping")
+            print(f"  No classes found, skipping")
 
 
 if __name__ == "__main__":

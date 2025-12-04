@@ -14,13 +14,18 @@ This will process all `.py` files in `supriya/ugens/` (excluding `__init__.py`, 
 
 The generator:
 
-1. Parses each Python file for classes decorated with `@ugen`
-2. Extracts decorator parameters (`ar`, `kr`, `ir`, `dr`, `new`, `is_multichannel`, `fixed_channel_count`, `channel_count`)
-3. Collects `param()` calls to identify UGen parameters and their properties (`unexpanded`)
-4. Generates stub classes with:
-   - `__init__` method with proper type hints
-   - Property stubs for each parameter
-   - Rate class methods (`ar`, `kr`, `ir`, `dr`, `new`) based on decorator arguments
+1. Parses each Python file for classes (both `@ugen` decorated and regular classes)
+2. For `@ugen` classes:
+   - Extracts decorator parameters (`ar`, `kr`, `ir`, `dr`, `new`, `is_multichannel`, `fixed_channel_count`, `channel_count`)
+   - Collects `param()` calls to identify UGen parameters and their properties (`unexpanded`)
+   - Generates stub classes with:
+     - `__init__` method with proper type hints
+     - Property stubs for each parameter
+     - Rate class methods (`ar`, `kr`, `ir`, `dr`, `new`) based on decorator arguments
+3. For non-`@ugen` classes (like `Envelope`, `Mix`, `CompanderD`):
+   - Generates basic stubs with method signatures extracted from the source
+   - Preserves type annotations where present
+   - Includes public methods, properties, and special methods
 
 ## Generated signatures
 
@@ -39,7 +44,9 @@ The stub generator follows the same logic as `supriya/ext/mypy.py`:
   - `channel_count: int = N` (for multichannel UGens without `fixed_channel_count`)
   - Return `UGenOperable`
 
-## Example
+## Examples
+
+### @ugen decorated class
 
 For a UGen like:
 
@@ -63,4 +70,38 @@ class SinOsc(UGen):
     def ar(cls, *, frequency: UGenRecursiveInput = ..., phase: UGenRecursiveInput = ...) -> UGenOperable: ...
     @classmethod
     def kr(cls, *, frequency: UGenRecursiveInput = ..., phase: UGenRecursiveInput = ...) -> UGenOperable: ...
+```
+
+### Non-@ugen class
+
+For a regular class like:
+
+```python
+class Envelope:
+    def __init__(
+        self,
+        amplitudes: Sequence[UGenOperable | float] = (0, 1, 0),
+        durations: Sequence[UGenOperable | float] = (1, 1),
+        # ... more parameters
+    ) -> None:
+        # implementation
+
+    @property
+    def duration(self) -> UGenOperable | float:
+        # implementation
+
+    @classmethod
+    def percussive(cls, attack_time: float = 0.01, release_time: float = 1.0) -> 'Envelope':
+        # implementation
+```
+
+The generator produces:
+
+```python
+class Envelope:
+    def __init__(self, amplitudes: Sequence[UGenOperable | float] = (0, 1, 0), durations: Sequence[UGenOperable | float] = (1, 1), ...) -> None: ...
+    @property
+    def duration(self) -> UGenOperable | float: ...
+    @classmethod
+    def percussive(cls, attack_time: float = 0.01, release_time: float = 1.0) -> Envelope: ...
 ```

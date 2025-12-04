@@ -3,6 +3,10 @@ from typing import Any
 from supriya.typing import CalculationRateLike
 from supriya.ugens.core import UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
 
+class CompanderD(PseudoUGen):
+    @classmethod
+    def ar(cls, source = None, threshold = 0.5, clamp_time = 0.01, relax_time = 0.1, slope_above = 1.0, slope_below = 1.0) -> Any: ...
+
 class Amplitude(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, source: UGenScalarInput = ..., attack_time: UGenScalarInput = ..., release_time: UGenScalarInput = ..., **kwargs: Any) -> None: ...
     @property

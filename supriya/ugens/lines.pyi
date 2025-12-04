@@ -3,6 +3,16 @@ from typing import Any
 from supriya.typing import CalculationRateLike
 from supriya.ugens.core import UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
 
+class LinLin(PseudoUGen):
+    @staticmethod
+    def ar(source, input_minimum = 0.0, input_maximum = 1.0, output_minimum = 1.0, output_maximum = 2.0) -> UGenOperable: ...
+    @staticmethod
+    def kr(source, input_minimum = 0.0, input_maximum = 1.0, output_minimum = 1.0, output_maximum = 2.0) -> UGenOperable: ...
+
+class Silence(PseudoUGen):
+    @classmethod
+    def ar(cls, channel_count = 1) -> Any: ...
+
 class A2K(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, source: UGenScalarInput = ..., **kwargs: Any) -> None: ...
     @property

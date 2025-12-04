@@ -3,6 +3,12 @@ from typing import Any
 from supriya.typing import CalculationRateLike
 from supriya.ugens.core import UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
 
+class Changed(PseudoUGen):
+    @classmethod
+    def ar(cls, source, threshold = 0) -> UGenOperable: ...
+    @classmethod
+    def kr(cls, source, threshold = 0) -> UGenOperable: ...
+
 class APF(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, source: UGenScalarInput = ..., frequency: UGenScalarInput = ..., radius: UGenScalarInput = ..., **kwargs: Any) -> None: ...
     @property

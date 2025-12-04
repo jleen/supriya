@@ -3,6 +3,9 @@ from typing import Any
 from supriya.typing import CalculationRateLike
 from supriya.ugens.core import UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
 
+class ODFType(IntEnumeration):
+    ...
+
 class BeatTrack(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, pv_chain: UGenScalarInput = ..., lock: UGenScalarInput = ..., **kwargs: Any) -> None: ...
     @property

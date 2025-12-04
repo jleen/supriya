@@ -3,6 +3,12 @@ from typing import Any
 from supriya.typing import CalculationRateLike
 from supriya.ugens.core import UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
 
+class Splay(PseudoUGen):
+    @classmethod
+    def ar(cls, source, center = 0, level = 1, normalize = True, spread = 1) -> Any: ...
+    @classmethod
+    def kr(cls, source, center = 0, level = 1, normalize = True, spread = 1) -> Any: ...
+
 class Balance2(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, left: UGenScalarInput = ..., right: UGenScalarInput = ..., position: UGenScalarInput = ..., level: UGenScalarInput = ..., **kwargs: Any) -> None: ...
     @property

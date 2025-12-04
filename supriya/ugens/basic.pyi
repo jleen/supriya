@@ -3,6 +3,12 @@ from typing import Any
 from supriya.typing import CalculationRateLike
 from supriya.ugens.core import UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
 
+class Mix(PseudoUGen):
+    @classmethod
+    def new(cls, sources) -> Any: ...
+    @classmethod
+    def multichannel(cls, sources, channel_count) -> Any: ...
+
 class MulAdd(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, source: UGenScalarInput = ..., multiplier: UGenScalarInput = ..., addend: UGenScalarInput = ..., **kwargs: Any) -> None: ...
     @property
