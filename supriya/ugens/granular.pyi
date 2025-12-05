@@ -1,7 +1,8 @@
-from typing import Any
+from typing import Any, Sequence
 
+from supriya.enums import EnvelopeShape
 from supriya.typing import CalculationRateLike
-from supriya.ugens.core import UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
+from supriya.ugens.core import PseudoUGen, UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
 
 class GrainBuf(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, channel_count: int = 1, trigger: UGenScalarInput = ..., duration: UGenScalarInput = ..., buffer_id: UGenScalarInput = ..., rate: UGenScalarInput = ..., position: UGenScalarInput = ..., interpolate: UGenScalarInput = ..., pan: UGenScalarInput = ..., envelope_buffer_id: UGenScalarInput = ..., maximum_overlap: UGenScalarInput = ..., **kwargs: Any) -> None: ...

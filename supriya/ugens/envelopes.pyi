@@ -1,7 +1,8 @@
-from typing import Any
+from typing import Any, Sequence
 
+from supriya.enums import EnvelopeShape
 from supriya.typing import CalculationRateLike
-from supriya.ugens.core import UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
+from supriya.ugens.core import PseudoUGen, UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
 
 class Envelope:
     def __init__(self, amplitudes: Sequence[UGenOperable | float] = (0, 1, 0), durations: Sequence[UGenOperable | float] = (1, 1), curves: Sequence[EnvelopeShape | UGenOperable | float | str | None] = (EnvelopeShape.LINEAR, EnvelopeShape.LINEAR), release_node: int | None = None, loop_node: int | None = None, offset: UGenOperable | float = 0.0) -> None: ...

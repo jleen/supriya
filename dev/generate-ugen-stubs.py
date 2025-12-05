@@ -263,7 +263,6 @@ class UGenStubGenerator(ast.NodeVisitor):
         if not self.non_ugen_classes:
             return []
 
-        # Re-parse to get class nodes
         source = self.source_path.read_text()
         tree = ast.parse(source)
 
@@ -287,10 +286,11 @@ class UGenStubGenerator(ast.NodeVisitor):
         # Add standard imports needed for stubs
         lines.extend(
             [
-                "from typing import Any",
+                "from typing import Any, Sequence",
                 "",
+                "from supriya.enums import EnvelopeShape",
                 "from supriya.typing import CalculationRateLike",
-                "from supriya.ugens.core import UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput",
+                "from supriya.ugens.core import PseudoUGen, UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput",
                 "",
             ]
         )

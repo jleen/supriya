@@ -23,9 +23,10 @@ The generator:
      - Property stubs for each parameter
      - Rate class methods (`ar`, `kr`, `ir`, `dr`, `new`) based on decorator arguments
 3. For non-`@ugen` classes (like `Envelope`, `Mix`, `CompanderD`):
-   - Generates basic stubs with method signatures extracted from the source
+   - Generates stubs by parsing the AST directly
    - Preserves type annotations where present
    - Includes public methods, properties, and special methods
+   - Handles `@property`, `@staticmethod`, and `@classmethod` decorators
 
 ## Generated signatures
 
