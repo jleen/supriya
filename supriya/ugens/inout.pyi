@@ -1,8 +1,10 @@
 from typing import Any, Sequence
+
 from ..enums import CalculationRate
-from ..utils import repeat_to_length
-from .core import UGenVector, UGenScalar, UGenScalarInput, ugen, param, UGenVectorInput, UGenOperable, UGenRecursiveInput, UGen
 from ..typing import CalculationRateLike
+from ..utils import repeat_to_length
+from .core import UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput, param, ugen
+
 class In(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, channel_count: int = 1, bus: UGenScalarInput = ..., **kwargs: Any) -> None: ...
     @property

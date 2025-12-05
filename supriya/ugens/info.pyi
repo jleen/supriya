@@ -1,6 +1,8 @@
-from .core import UGenScalar, ugen, UGenScalarInput, param, UGenOperable, UGenRecursiveInput, UGen
-from ..typing import CalculationRateLike
 from typing import Any
+
+from ..typing import CalculationRateLike
+from .core import UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, param, ugen
+
 class BlockSize(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, **kwargs: Any) -> None: ...
     @classmethod

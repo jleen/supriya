@@ -1,7 +1,9 @@
 from typing import Any
-from ..enums import DoneAction, CalculationRate
-from .core import UGenVector, UGenScalar, UGenScalarInput, ugen, param, UGenVectorInput, UGenOperable, UGenRecursiveInput, UGen
+
+from ..enums import CalculationRate, DoneAction
 from ..typing import CalculationRateLike
+from .core import UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput, param, ugen
+
 class COsc(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, buffer_id: UGenScalarInput = ..., frequency: UGenScalarInput = ..., beats: UGenScalarInput = ..., **kwargs: Any) -> None: ...
     @property

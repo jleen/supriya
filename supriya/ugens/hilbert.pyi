@@ -1,6 +1,8 @@
-from .core import UGenScalar, UGenScalarInput, ugen, param, UGenOperable, UGenRecursiveInput, UGen
-from ..typing import CalculationRateLike
 from typing import Any
+
+from ..typing import CalculationRateLike
+from .core import UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, param, ugen
+
 class FreqShift(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, source: UGenScalarInput = ..., frequency: UGenScalarInput = ..., phase: UGenScalarInput = ..., **kwargs: Any) -> None: ...
     @property

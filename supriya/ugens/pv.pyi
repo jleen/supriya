@@ -1,9 +1,11 @@
 from typing import Any
+
 from ..enums import CalculationRate
-from ..typing import Default, CalculationRateLike
+from ..typing import CalculationRateLike, Default
 from .bufio import LocalBuf
-from .core import OutputProxy, UGenScalar, ugen, UGenScalarInput, param, UGenOperable, UGenRecursiveInput, UGen
+from .core import OutputProxy, UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, param, ugen
 from .info import BufFrames
+
 class PV_ChainUGen(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, **kwargs: Any) -> None: ...
 

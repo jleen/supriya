@@ -1,8 +1,10 @@
-from ..enums import CalculationRate
-from .basic import Mix
-from .core import UGenVector, UGenScalar, ugen, UGenScalarInput, param, _get_method_for_rate, UGenRecursiveInput, UGenOperable, UGenRecursiveParams, PseudoUGen, UGen
-from ..typing import CalculationRateLike
 from typing import Any
+
+from ..enums import CalculationRate
+from ..typing import CalculationRateLike
+from .basic import Mix
+from .core import PseudoUGen, UGen, UGenOperable, UGenRecursiveInput, UGenRecursiveParams, UGenScalar, UGenScalarInput, UGenVector, _get_method_for_rate, param, ugen
+
 class Splay(PseudoUGen):
     @classmethod
     def ar(cls, source, center = 0, level = 1, normalize = True, spread = 1) -> Any: ...

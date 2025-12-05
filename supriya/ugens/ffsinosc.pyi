@@ -1,8 +1,10 @@
-from typing import Sequence, Any
 from supriya import utils
+from typing import Any, Sequence
+
 from ..enums import CalculationRate
-from .core import UGenVector, UGenScalar, UGenScalarInput, ugen, param, UGenVectorInput, UGenOperable, UGenRecursiveInput, UGen
 from ..typing import CalculationRateLike
+from .core import UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput, param, ugen
+
 class Blip(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, frequency: UGenScalarInput = ..., harmonic_count: UGenScalarInput = ..., **kwargs: Any) -> None: ...
     @property

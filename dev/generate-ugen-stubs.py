@@ -301,7 +301,18 @@ class UGenStubGenerator(ast.NodeVisitor):
             lines.append(class_stub)
             lines.append("")
 
-        lines[:0] = [f"from {module} import {', '.join(names)}" for (module, names) in self.imports.items()]
+        # Separate system and relative imports
+        system_imports = []
+        relative_imports = []
+        for module, names in sorted(self.imports.items()):
+            import_line = f"from {module} import {', '.join(sorted(names))}"
+            if module.startswith('.'):
+                relative_imports.append(import_line)
+            else:
+                system_imports.append(import_line)
+
+        # Add imports with system modules first
+        lines[:0] = system_imports + [""] + relative_imports + [""]
 
         return "\n".join(lines).rstrip() + "\n"
 

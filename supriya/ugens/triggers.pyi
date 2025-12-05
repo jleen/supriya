@@ -1,7 +1,9 @@
-from ..enums import CalculationRate
-from .core import OutputProxy, UGenVector, UGenScalar, ugen, UGenScalarInput, param, UGenVectorInput, UGenOperable, UGenRecursiveInput, UGen
-from ..typing import CalculationRateLike
 from typing import Any
+
+from ..enums import CalculationRate
+from ..typing import CalculationRateLike
+from .core import OutputProxy, UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput, param, ugen
+
 class Clip(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, source: UGenScalarInput = ..., minimum: UGenScalarInput = ..., maximum: UGenScalarInput = ..., **kwargs: Any) -> None: ...
     @property

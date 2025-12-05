@@ -1,8 +1,10 @@
 from typing import Any
 from uqbar.enums import IntEnumeration
+
 from ..enums import CalculationRate
-from .core import UGenScalar, UGenScalarInput, ugen, param, UGenOperable, UGenRecursiveInput, UGen
 from ..typing import CalculationRateLike
+from .core import UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, param, ugen
+
 class ODFType(IntEnumeration):
     ...
 

@@ -1,6 +1,8 @@
-from .core import UGenScalar, UGenScalarInput, ugen, param, UGenOperable, UGenRecursiveInput, UGen
-from ..typing import CalculationRateLike
 from typing import Any
+
+from ..typing import CalculationRateLike
+from .core import UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, param, ugen
+
 class CuspL(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, frequency: UGenScalarInput = ..., a: UGenScalarInput = ..., b: UGenScalarInput = ..., xi: UGenScalarInput = ..., **kwargs: Any) -> None: ...
     @property

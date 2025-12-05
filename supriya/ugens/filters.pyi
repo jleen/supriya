@@ -1,7 +1,9 @@
-from ..enums import DoneAction
-from .core import UGenScalar, ugen, UGenScalarInput, param, UGenOperable, UGenRecursiveInput, PseudoUGen, UGen
-from ..typing import CalculationRateLike
 from typing import Any
+
+from ..enums import DoneAction
+from ..typing import CalculationRateLike
+from .core import PseudoUGen, UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, param, ugen
+
 class Changed(PseudoUGen):
     @classmethod
     def ar(cls, source, threshold = 0) -> UGenOperable: ...

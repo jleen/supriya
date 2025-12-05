@@ -1,6 +1,8 @@
-from .core import UGenScalar, UGenScalarInput, ugen, param, UGenOperable, UGenRecursiveInput, UGen
-from ..typing import CalculationRateLike
 from typing import Any
+
+from ..typing import CalculationRateLike
+from .core import UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, param, ugen
+
 class FreeVerb(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, source: UGenScalarInput = ..., mix: UGenScalarInput = ..., room_size: UGenScalarInput = ..., damping: UGenScalarInput = ..., **kwargs: Any) -> None: ...
     @property

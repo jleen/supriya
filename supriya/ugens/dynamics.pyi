@@ -1,8 +1,10 @@
-from ..enums import CalculationRate
-from .core import UGenScalar, UGenScalarInput, ugen, param, UGenOperable, UGenRecursiveInput, PseudoUGen, UGen
-from .delay import DelayN
-from ..typing import CalculationRateLike
 from typing import Any
+
+from ..enums import CalculationRate
+from ..typing import CalculationRateLike
+from .core import PseudoUGen, UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, param, ugen
+from .delay import DelayN
+
 class CompanderD(PseudoUGen):
     @classmethod
     def ar(cls, source = None, threshold = 0.5, clamp_time = 0.01, relax_time = 0.1, slope_above = 1.0, slope_below = 1.0) -> Any: ...
