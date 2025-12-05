@@ -1,9 +1,8 @@
-from typing import Any, Sequence
-
-from supriya.enums import EnvelopeShape
-from supriya.typing import CalculationRateLike
-from supriya.ugens.core import PseudoUGen, UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
-
+from typing import Sequence, SupportsFloat, TYPE_CHECKING, Any, cast
+from ..enums import EnvelopeShape
+from ..utils import expand_deep
+from .core import OutputProxy, UGenVector, UGenScalar, ugen, UGenScalarInput, param, UGenVectorInput, UGenOperable, UGenRecursiveInput, UGen
+from ..typing import CalculationRateLike
 class Envelope:
     def __init__(self, amplitudes: Sequence[UGenOperable | float] = (0, 1, 0), durations: Sequence[UGenOperable | float] = (1, 1), curves: Sequence[EnvelopeShape | UGenOperable | float | str | None] = (EnvelopeShape.LINEAR, EnvelopeShape.LINEAR), release_node: int | None = None, loop_node: int | None = None, offset: UGenOperable | float = 0.0) -> None: ...
     def __plot__(self) -> tuple['numpy.ndarray', float]: ...

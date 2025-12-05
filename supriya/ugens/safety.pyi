@@ -1,9 +1,7 @@
-from typing import Any, Sequence
-
-from supriya.enums import EnvelopeShape
-from supriya.typing import CalculationRateLike
-from supriya.ugens.core import PseudoUGen, UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
-
+from typing import Any
+from ..enums import CalculationRate
+from .core import UGenScalar, UGenScalarInput, ugen, param, UGenOperable, UGenRecursiveInput, UGen
+from ..typing import CalculationRateLike
 class CheckBadValues(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, source: UGenScalarInput = ..., ugen_id: UGenScalarInput = ..., post_mode: UGenScalarInput = ..., **kwargs: Any) -> None: ...
     @property

@@ -2,8 +2,9 @@
 """Generate .pyi stub files for UGen classes."""
 
 import ast
+from collections import defaultdict
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict, Set
 
 
 class UGenStubGenerator(ast.NodeVisitor):
@@ -11,7 +12,7 @@ class UGenStubGenerator(ast.NodeVisitor):
 
     def __init__(self, source_path: Path):
         self.source_path = source_path
-        self.imports: set[str] = set()
+        self.imports: Dict[str, Set[str]] = defaultdict(set)
         self.ugen_classes: list[str] = []
         self.non_ugen_classes: list[str] = []
         self.ugen_decorator_params: dict[str, Any] = {}
@@ -20,8 +21,7 @@ class UGenStubGenerator(ast.NodeVisitor):
     def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
         """Collect imports from the source file."""
         if node.module:
-            names = ", ".join(alias.name for alias in node.names)
-            self.imports.add(f"from {node.module} import {names}")
+            self.imports['.' * node.level + node.module].update([n.name for n in node.names])
         self.generic_visit(node)
 
     def visit_ClassDef(self, node: ast.ClassDef) -> None:
@@ -105,6 +105,7 @@ class UGenStubGenerator(ast.NodeVisitor):
 
         # Generate __init__ method
         init_params = ["self", "*", "calculation_rate: CalculationRateLike"]
+        self.imports["..typing"].add("CalculationRateLike")
 
         # Add channel_count parameter if needed
         is_multichannel = decorator_args.get("is_multichannel", False)
@@ -117,8 +118,10 @@ class UGenStubGenerator(ast.NodeVisitor):
         for param_name, unexpanded in params:
             type_hint = "UGenVectorInput" if unexpanded else "UGenScalarInput"
             init_params.append(f"{param_name}: {type_hint} = ...")
+            self.imports[".core"].add(type_hint)
 
         init_params.append("**kwargs: Any")
+        self.imports["typing"].add("Any")
 
         lines.append(f"    def __init__({', '.join(init_params)}) -> None: ...")
 
@@ -127,6 +130,7 @@ class UGenStubGenerator(ast.NodeVisitor):
             return_type = "UGenVector" if unexpanded else "UGenScalar"
             lines.append(f"    @property")
             lines.append(f"    def {param_name}(self) -> {return_type}: ...")
+            self.imports[".core"].add(return_type)
 
         # Generate rate class methods (ar, kr, ir, dr, new)
         for rate_name in ["ar", "kr", "ir", "dr", "new"]:
@@ -140,6 +144,7 @@ class UGenStubGenerator(ast.NodeVisitor):
             # Add parameter arguments with UGenRecursiveInput type
             for param_name, _ in params:
                 rate_params.append(f"{param_name}: UGenRecursiveInput = ...")
+                self.imports[".core"].add("UGenRecursiveInput")
 
             # Add channel_count parameter if needed
             if is_multichannel and not fixed_channel_count:
@@ -150,6 +155,7 @@ class UGenStubGenerator(ast.NodeVisitor):
             lines.append(
                 f"    def {rate_name}({', '.join(rate_params)}) -> UGenOperable: ..."
             )
+            self.imports[".core"].add("UGenOperable")
 
         return "\n".join(lines)
 
@@ -256,6 +262,7 @@ class UGenStubGenerator(ast.NodeVisitor):
         """Get the return type annotation."""
         if func.returns:
             return ast.unparse(func.returns)
+        self.imports["typing"].add("Any")
         return "Any"
 
     def _collect_non_ugen_stubs(self) -> list[str]:
@@ -283,18 +290,6 @@ class UGenStubGenerator(ast.NodeVisitor):
         # Build stub content
         lines = []
 
-        # Add standard imports needed for stubs
-        lines.extend(
-            [
-                "from typing import Any, Sequence",
-                "",
-                "from supriya.enums import EnvelopeShape",
-                "from supriya.typing import CalculationRateLike",
-                "from supriya.ugens.core import PseudoUGen, UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput",
-                "",
-            ]
-        )
-
         # Add non-@ugen classes first
         non_ugen_stubs = self._collect_non_ugen_stubs()
         for stub in non_ugen_stubs:
@@ -305,6 +300,8 @@ class UGenStubGenerator(ast.NodeVisitor):
         for class_stub in self.ugen_classes:
             lines.append(class_stub)
             lines.append("")
+
+        lines[:0] = [f"from {module} import {', '.join(names)}" for (module, names) in self.imports.items()]
 
         return "\n".join(lines).rstrip() + "\n"
 

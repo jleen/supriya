@@ -1,9 +1,7 @@
-from typing import Any, Sequence
-
-from supriya.enums import EnvelopeShape
-from supriya.typing import CalculationRateLike
-from supriya.ugens.core import PseudoUGen, UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
-
+from ..enums import CalculationRate
+from .core import OutputProxy, UGenVector, UGenScalar, ugen, UGenScalarInput, param, UGenVectorInput, UGenOperable, UGenRecursiveInput, UGen
+from ..typing import CalculationRateLike
+from typing import Any
 class Clip(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, source: UGenScalarInput = ..., minimum: UGenScalarInput = ..., maximum: UGenScalarInput = ..., **kwargs: Any) -> None: ...
     @property

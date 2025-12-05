@@ -1,9 +1,7 @@
-from typing import Any, Sequence
-
-from supriya.enums import EnvelopeShape
-from supriya.typing import CalculationRateLike
-from supriya.ugens.core import PseudoUGen, UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
-
+from ..enums import SignalRange
+from .core import UGenScalar, UGenScalarInput, ugen, param, UGenOperable, UGenRecursiveInput, UGen
+from ..typing import CalculationRateLike
+from typing import Any
 class KeyState(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, keycode: UGenScalarInput = ..., minimum: UGenScalarInput = ..., maximum: UGenScalarInput = ..., lag: UGenScalarInput = ..., **kwargs: Any) -> None: ...
     @property

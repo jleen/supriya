@@ -1,9 +1,7 @@
-from typing import Any, Sequence
-
-from supriya.enums import EnvelopeShape
-from supriya.typing import CalculationRateLike
-from supriya.ugens.core import PseudoUGen, UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
-
+from ..enums import DoneAction
+from .core import UGenScalar, ugen, UGenScalarInput, param, UGenOperable, UGenRecursiveInput, PseudoUGen, UGen
+from ..typing import CalculationRateLike
+from typing import Any
 class Changed(PseudoUGen):
     @classmethod
     def ar(cls, source, threshold = 0) -> UGenOperable: ...

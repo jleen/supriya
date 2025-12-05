@@ -1,9 +1,7 @@
-from typing import Any, Sequence
-
-from supriya.enums import EnvelopeShape
-from supriya.typing import CalculationRateLike
-from supriya.ugens.core import PseudoUGen, UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
-
+from typing import Any
+from ..enums import CalculationRate
+from ..typing import Default, CalculationRateLike
+from .core import UGenScalar, UGenScalarInput, ugen, param, UGenOperable, UGenRecursiveInput, UGen
 class Gendy1(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, ampdist: UGenScalarInput = ..., durdist: UGenScalarInput = ..., adparam: UGenScalarInput = ..., ddparam: UGenScalarInput = ..., minfrequency: UGenScalarInput = ..., maxfrequency: UGenScalarInput = ..., ampscale: UGenScalarInput = ..., durscale: UGenScalarInput = ..., init_cps: UGenScalarInput = ..., knum: UGenScalarInput = ..., **kwargs: Any) -> None: ...
     @property

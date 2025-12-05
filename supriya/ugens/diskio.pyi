@@ -1,9 +1,6 @@
-from typing import Any, Sequence
-
-from supriya.enums import EnvelopeShape
-from supriya.typing import CalculationRateLike
-from supriya.ugens.core import PseudoUGen, UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
-
+from .core import UGenVector, UGenScalar, UGenScalarInput, ugen, param, UGenVectorInput, UGenOperable, UGenRecursiveInput, UGen
+from ..typing import CalculationRateLike
+from typing import Any
 class DiskIn(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, channel_count: int = 1, buffer_id: UGenScalarInput = ..., loop: UGenScalarInput = ..., **kwargs: Any) -> None: ...
     @property

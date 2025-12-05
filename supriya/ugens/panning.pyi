@@ -1,9 +1,8 @@
-from typing import Any, Sequence
-
-from supriya.enums import EnvelopeShape
-from supriya.typing import CalculationRateLike
-from supriya.ugens.core import PseudoUGen, UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
-
+from ..enums import CalculationRate
+from .basic import Mix
+from .core import UGenVector, UGenScalar, ugen, UGenScalarInput, param, _get_method_for_rate, UGenRecursiveInput, UGenOperable, UGenRecursiveParams, PseudoUGen, UGen
+from ..typing import CalculationRateLike
+from typing import Any
 class Splay(PseudoUGen):
     @classmethod
     def ar(cls, source, center = 0, level = 1, normalize = True, spread = 1) -> Any: ...

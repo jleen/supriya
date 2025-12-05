@@ -1,9 +1,7 @@
-from typing import Any, Sequence
-
-from supriya.enums import EnvelopeShape
-from supriya.typing import CalculationRateLike
-from supriya.ugens.core import PseudoUGen, UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
-
+from typing import Any
+from ..enums import DoneAction, CalculationRate
+from .core import UGenVector, UGenScalar, UGenScalarInput, ugen, param, UGenVectorInput, UGenOperable, UGenRecursiveInput, UGen
+from ..typing import CalculationRateLike
 class COsc(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, buffer_id: UGenScalarInput = ..., frequency: UGenScalarInput = ..., beats: UGenScalarInput = ..., **kwargs: Any) -> None: ...
     @property

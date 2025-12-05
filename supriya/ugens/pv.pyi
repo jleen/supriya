@@ -1,9 +1,9 @@
-from typing import Any, Sequence
-
-from supriya.enums import EnvelopeShape
-from supriya.typing import CalculationRateLike
-from supriya.ugens.core import PseudoUGen, UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
-
+from typing import Any
+from ..enums import CalculationRate
+from ..typing import Default, CalculationRateLike
+from .bufio import LocalBuf
+from .core import OutputProxy, UGenScalar, ugen, UGenScalarInput, param, UGenOperable, UGenRecursiveInput, UGen
+from .info import BufFrames
 class PV_ChainUGen(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, **kwargs: Any) -> None: ...
 

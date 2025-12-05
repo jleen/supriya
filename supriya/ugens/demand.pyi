@@ -1,9 +1,8 @@
-from typing import Any, Sequence
-
-from supriya.enums import EnvelopeShape
-from supriya.typing import CalculationRateLike
-from supriya.ugens.core import PseudoUGen, UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
-
+from collections.abc import Sequence
+from typing import Any
+from ..enums import CalculationRate
+from .core import UGenVector, UGenScalar, UGenScalarInput, ugen, param, UGenVectorInput, UGenOperable, UGenRecursiveInput, UGen
+from ..typing import CalculationRateLike
 class Dbrown(UGen):
     def __init__(self, *, calculation_rate: CalculationRateLike, minimum: UGenScalarInput = ..., maximum: UGenScalarInput = ..., step: UGenScalarInput = ..., length: UGenScalarInput = ..., **kwargs: Any) -> None: ...
     @property

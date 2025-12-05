@@ -1,9 +1,8 @@
-from typing import Any, Sequence
-
-from supriya.enums import EnvelopeShape
-from supriya.typing import CalculationRateLike
-from supriya.ugens.core import PseudoUGen, UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
-
+from typing import Any, Sequence, SupportsInt, Union
+from ..enums import CalculationRate
+from ..typing import CalculationRateLike
+from ..utils import flatten
+from .core import UGenVector, UGenScalar, UGenScalarInput, UGenVectorInput, param, ugen, UGenOperable, UGenRecursiveInput, PseudoUGen, UGen
 class Mix(PseudoUGen):
     @classmethod
     def new(cls, sources) -> Any: ...

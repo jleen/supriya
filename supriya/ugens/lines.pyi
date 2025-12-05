@@ -1,9 +1,8 @@
-from typing import Any, Sequence
-
-from supriya.enums import EnvelopeShape
-from supriya.typing import CalculationRateLike
-from supriya.ugens.core import PseudoUGen, UGen, UGenOperable, UGenRecursiveInput, UGenScalar, UGenScalarInput, UGenVector, UGenVectorInput
-
+from typing import Any
+from ..enums import DoneAction, CalculationRate
+from .basic import MulAdd
+from .core import UGenVector, UGenScalar, ugen, UGenScalarInput, param, UGenOperable, UGenRecursiveInput, PseudoUGen, UGen
+from ..typing import CalculationRateLike
 class LinLin(PseudoUGen):
     @staticmethod
     def ar(source, input_minimum = 0.0, input_maximum = 1.0, output_minimum = 1.0, output_maximum = 2.0) -> UGenOperable: ...
